@@ -1,6 +1,6 @@
 datasets
 fsspec==2023.4.0
-huggingface-hub==0.15.1
+huggingface-hub
 jupyter==1.0.0
 matplotlib==3.7.2
 multiprocess==0.70.14
