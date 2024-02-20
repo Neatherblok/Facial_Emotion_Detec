@@ -17,3 +17,5 @@ torchaudio==2.1.1
 torchvision==0.16.1
 tqdm==4.65.0
 transformers==4.32.1
+opencv-python
+imutils
