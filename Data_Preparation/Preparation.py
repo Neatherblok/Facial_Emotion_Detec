@@ -53,6 +53,9 @@ class CustomDataLoader:
             transforms.Resize(299),  # Resize to size 48x48,
             transforms.Grayscale(num_output_channels=self.dimensions),
             transforms.ToTensor(),
+            transforms.RandomHorizontalFlip(),
+            transforms.RandomVerticalFlip(),
+            transforms.ConvertImageDtype(torch.float),
             transforms.Normalize(mean=self.mean, std=self.std)
         ])
 
@@ -60,13 +63,13 @@ class CustomDataLoader:
                                                         transform=self.transform)
 
         if self.dataset_type == 'train':
-            shuffle = True
+            sampler = torch.utils.data.RandomSampler(self.dataset)
         else:
-            shuffle = False
+            sampler = torch.utils.data.SequentialSampler(self.dataset)
 
-        self.data_loader = DataLoader(self.dataset, batch_size=self.batch_size, shuffle=shuffle,
+        self.data_loader = DataLoader(self.dataset, batch_size=self.batch_size, sampler=sampler,
                                       num_workers=os.cpu_count(),
-                                      pin_memory=True if torch.cuda.is_available() else False)
+                                      pin_memory=True)
 
     def __getitem__(self, index):
         return self.dataset[index]
