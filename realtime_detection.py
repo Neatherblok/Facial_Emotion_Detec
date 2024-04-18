@@ -11,20 +11,14 @@ import time
 stream = cv2.VideoCapture(0)
 
 # Specify the path to the saved model
-PATH = 'Models/InceptionV3/trained_inception_v3.pt'
+PATH = 'Models/Resnet50/OneDrive_1_4-18-2024/ResNet50.pt'
 
 # Load the model
-model = models.inception_v3(pretrained=True)
+model = models.resnet50(pretrained=True)
 
 # Freeze the parameters
 for parameter in model.parameters():
     parameter.requires_grad = False
-
-# Replace the last fully connected layer with a new one that outputs 7 classes
-num_ftrs = model.fc.in_features
-model.fc = nn.Linear(num_ftrs, 7)  # Output layer with 7 classes
-model.aux_logits = False
-model.AuxLogits = None
 
 # Load the saved weights
 model_state_dict = torch.load(PATH)
@@ -80,13 +74,13 @@ def main():
         text_color = (0, 0, 0)  # Black color
         text_thickness = 2
         text_box_color = (255, 255, 255)  # White color
-        text_box_thickness = 2
 
         # Add the text to the frame
         text_size, _ = cv2.getTextSize(results, cv2.FONT_HERSHEY_SIMPLEX, 1, text_thickness)
         x_text_pos = 10
         y_text_pos = y_shape - 10 - text_size[1]
         cv2.putText(frame, results, (x_text_pos, y_text_pos), cv2.FONT_HERSHEY_SIMPLEX, 1, text_color, text_thickness)
+        cv2.putText(frame, results, (x_text_pos, y_text_pos+2), cv2.FONT_HERSHEY_SIMPLEX, 1, text_box_color, text_thickness)
         cv2.imshow("frame", frame)
         cv2.waitKey(1)
         out.write(frame)  # Write the frame onto the output.
