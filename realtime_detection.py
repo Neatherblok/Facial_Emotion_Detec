@@ -56,6 +56,7 @@ def score_frame(frame, model, transforms):
     return labels
 
 # Define the main function
+
 def main():
     assert stream.isOpened()  # Make sure that their is a stream.
     # Below code creates a new video writer object to write our
@@ -70,11 +71,22 @@ def main():
         if not ret:
             break
         start_time = time.time()  # We would like to measure the FPS.
+        # Always display the last predicted result
         results = score_frame(frame, model, transforms)  # Score the Frame
         end_time = time.time()
         fps = 1 / np.round(end_time - start_time, 3)  # Measure the FPS.
         print(f"Frames Per Second : {fps}")
-        cv2.putText(frame, results, (10, y_shape - 10), cv2.FONT_HERSHEY_SIMPLEX, 1, (255, 255, 255), 2)
+        # Define the text settings
+        text_color = (0, 0, 0)  # Black color
+        text_thickness = 2
+        text_box_color = (255, 255, 255)  # White color
+        text_box_thickness = 2
+
+        # Add the text to the frame
+        text_size, _ = cv2.getTextSize(results, cv2.FONT_HERSHEY_SIMPLEX, 1, text_thickness)
+        x_text_pos = 10
+        y_text_pos = y_shape - 10 - text_size[1]
+        cv2.putText(frame, results, (x_text_pos, y_text_pos), cv2.FONT_HERSHEY_SIMPLEX, 1, text_color, text_thickness)
         cv2.imshow("frame", frame)
         cv2.waitKey(1)
         out.write(frame)  # Write the frame onto the output.
